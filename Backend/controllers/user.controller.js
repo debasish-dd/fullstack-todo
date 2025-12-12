@@ -1,4 +1,6 @@
 import { User } from "../models/user.models.js";
+import jwt from "jsonwebtoken"
+
 
 export const register = async (req, res) => {
     try {
@@ -10,7 +12,7 @@ export const register = async (req, res) => {
                 success: false
             });
         }
-        
+
         // Basic validation
         if (!username || !email || !password) {
             return res.status(400).json({
@@ -69,9 +71,29 @@ export const login = async (req, res) => {
             });
         }
 
-        
-        
+        const token = jwt.sign({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            username: user.username
+        },
+            "sshhhhh",
+            {
+                expiresIn: '24h'
+            }
+        )
 
+        res.cookie("user", token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 24*60*60*1000
+        })
+        return res.status(200).json({
+            message: "Login successful",
+            success: true,
+            user,
+            token
+        })
 
     } catch (error) {
         return res.status(500).json({
