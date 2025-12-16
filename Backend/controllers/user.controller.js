@@ -1,6 +1,7 @@
 import { User } from "../models/user.models.js";
 import jwt from "jsonwebtoken"
-
+import 'dotenv/config'
+import bcrypt from "bcryptjs";
 
 export const register = async (req, res) => {
     try {
@@ -55,7 +56,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body
-        const user = User.findOne({ email });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({
                 message: "User does not exist, please register",
@@ -77,7 +78,7 @@ export const login = async (req, res) => {
             email: user.email,
             username: user.username
         },
-            "sshhhhh",
+            process.env.JWT_SECRET,
             {
                 expiresIn: '24h'
             }
@@ -86,7 +87,7 @@ export const login = async (req, res) => {
         res.cookie("user", token, {
             httpOnly: true,
             secure: true,
-            maxAge: 24*60*60*1000
+            maxAge: 24 * 60 * 60 * 1000
         })
         return res.status(200).json({
             message: "Login successful",
@@ -95,6 +96,24 @@ export const login = async (req, res) => {
             token
         })
 
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server Error",
+            success: false,
+            error: error.message
+        })
+    }
+}
+
+export const profile = async (req, res) => {
+    try {
+        
+
+        return res.status(200).json({
+            message: "User profile fetched successfully",
+            success: true,
+            user: req.user
+        })
     } catch (error) {
         return res.status(500).json({
             message: "Server Error",
