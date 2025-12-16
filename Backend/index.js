@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 //routes
 app.use('/api/v0/users' , userRouter)
-app.use('/todos' , todoRouter )
+app.use('/api/v1' , todoRouter )
 
 const port = process.env.BASE_URL || 4000
 app.listen(port, () => {

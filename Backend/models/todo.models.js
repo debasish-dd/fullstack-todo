@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 
 const todoSchema = new Schema({
     title: {
@@ -9,7 +9,12 @@ const todoSchema = new Schema({
     body: {
         type: String,
         required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
-} , {timestamps: true})
+}, { timestamps: true })
 
-export const Todo = mongoose.model( "Todo" ,todoSchema)
+export const Todo = mongoose.model("Todo", todoSchema)

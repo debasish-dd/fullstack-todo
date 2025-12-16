@@ -21,7 +21,8 @@ const userSchema = new Schema({
     },
     list: [{
         type: Schema.Types.ObjectId,
-        ref: "Todo"
+        ref: "Todo",
+        required: true
     }]
     
 } , {timestamps: true})

@@ -1,5 +1,5 @@
 import { User } from "../models/user.models.js";
-import {Todo} from "../models/todo.models.js"
+import { Todo } from "../models/todo.models.js"
 
 export const addTodoController = async (req, res) => {
     try {
@@ -10,16 +10,10 @@ export const addTodoController = async (req, res) => {
                 success: false
             });
         }
-         const id = existingUser.id;
-        if (!id) {
-            return res.status(400).json({
-                message: "user id not found",
-                success: false
-            });
-        }
-        console.log(id);
-        const {title , body} = req.body;
-       if (!title || !body) {
+        const id = existingUser.id;
+
+        const { title, body } = req.body;
+        if (!title || !body) {
             return res.status(400).json({
                 message: "Title and body are required",
                 success: false
@@ -29,23 +23,23 @@ export const addTodoController = async (req, res) => {
             title,
             body,
             user: id
-        }) 
+        })
 
-       await newTodo.save();
-         await User.findByIdAndUpdate(
+        await newTodo.save();
+        await User.findByIdAndUpdate(
             id,
             { $push: { list: newTodo._id } },
             { new: true }
         );
 
-       
-         return res.status(201).json({
+
+        return res.status(201).json({
             message: "Todo created successfully",
             success: true,
             todo: newTodo
         });
 
-    
+
     } catch (error) {
         return res.status(500).json({
             message: "Server Error",
@@ -53,6 +47,6 @@ export const addTodoController = async (req, res) => {
             error: error.message
         })
     }
-   
-    
+
+
 }
