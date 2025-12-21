@@ -4,6 +4,7 @@ import "dotenv/config"
 import userRouter from './routers/user.route.js'
 import todoRouter from './routers/todo.route.js'
 import cookieParser from 'cookie-parser'
+import isLogin from './middlewares/auth.middleware.js'
 
 const app = express()
 
