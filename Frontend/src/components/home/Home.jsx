@@ -3,7 +3,7 @@ import React from 'react'
 function Home() {
   return (
     <div>
-      <div className='p-5 m-5'>
+      <div className='p-5 m-5 mt-25'>
     <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dignissimos deleniti nemo quod ratione voluptas consequatur iure, quam aliquam, perferendis, aperiam temporibus esse. Magni eius rem ad commodi esse, facere adipisci iusto alias laborum tempore? Pariatur, voluptatem dolor. Culpa maxime accusamus repellat iure corporis fugiat totam itaque vel reprehenderit, obcaecati provident inventore eius nulla, nisi quaerat sed dolorem sequi. Quasi neque saepe, voluptates iure corporis aliquam dignissimos, officia distinctio magni, culpa commodi in. Natus odit, esse eveniet at perferendis a temporibus illum sapiente sed animi ipsa libero vel autem alias nulla neque corporis repellat atque nam. Nihil earum obcaecati amet corporis.</p>
       </div>
       <div className='p-5 m-5'>
