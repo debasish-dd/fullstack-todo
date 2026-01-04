@@ -1,5 +1,5 @@
 import {createBrowserRouter} from "react-router-dom"
-import Todo from "./../components/todo/Todo"
+import Todo from "../components/todo/Todo"
 import Layout from "../layout/Layout"
 import Home from "./../components/home/Home"
 

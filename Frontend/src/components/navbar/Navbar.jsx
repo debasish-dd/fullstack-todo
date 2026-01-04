@@ -34,7 +34,7 @@ function Navbar() {
   }
 
   return (
-    <div className=' bg-white/30 rounded-2xl backdrop-blur-md shadow-sm fixed top-0 left-0 right-0 transition-all m-5'>
+    <div className=' bg-white/30 rounded-2xl backdrop-blur-md z-50 shadow-sm fixed top-0 left-0 right-0 transition-all m-5'>
       <header>
         <nav className='flex items-center justify-between mx-4'>
           {/* logo  */}
