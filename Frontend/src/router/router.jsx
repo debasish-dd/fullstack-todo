@@ -1,8 +1,8 @@
 import {createBrowserRouter} from "react-router-dom"
-import Todo from "../components/todo/Todo"
-import Layout from "../layout/Layout"
-import Home from "./../components/home/Home"
-import About from "../components/About"
+import Todo from "../components/todo/Todo.jsx"
+import Layout from "../layout/Layout.jsx"
+import Home from "../components/home/Home.jsx"
+
 
 export const router = createBrowserRouter([
   
@@ -18,10 +18,7 @@ export const router = createBrowserRouter([
                 path: 'todo',
                 element: <Todo/>
             },
-            {
-                path: 'about',
-                element: <About/>
-            }
+            
         ]
     },
 ])

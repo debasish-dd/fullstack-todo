@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai"
 import logo from './logo/logo.png'
+import { Button } from '../ui/button'
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -41,7 +42,10 @@ function Navbar() {
         to="/login"
         className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-500 transition-colors"
       >
+        <Button>
+
         Login
+        </Button>
       </Link>
       <Link
         to="/signup"
