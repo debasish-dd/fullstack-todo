@@ -1,9 +1,10 @@
 import {createBrowserRouter} from "react-router-dom"
-import Todo from "../components/todo/Todo.jsx"
+import Todo from "../components/todo/TodoLanding.jsx"
 import Layout from "../layout/Layout.jsx"
 import Home from "../components/home/Home.jsx"
 import Login from "../components/navbar/Login.jsx"
 import Signup from "../components/navbar/Signup.jsx"
+import PrivateLayout from "@/layout/PrivateLayout.jsx"
 
 export const router = createBrowserRouter([
   
@@ -16,10 +17,6 @@ export const router = createBrowserRouter([
                 element: <Home/>
             },
             {
-                path: 'todo',
-                element: <Todo/>
-            },
-            {
                 path: 'login',
                 element: <Login/>
             },
@@ -30,4 +27,14 @@ export const router = createBrowserRouter([
             
         ]
     },
+    {
+        path: '/todo',
+        element: <PrivateLayout/>,
+        children: [
+            {
+                index: true,
+                element: <Todo/>
+            }
+        ]
+    }
 ])
