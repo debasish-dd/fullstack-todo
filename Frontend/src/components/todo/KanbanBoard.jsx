@@ -1,32 +1,102 @@
-import React from 'react'
+import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { useState } from "react";
+import KanbanColumn from "./KanbanColumn";
+import TaskCard from "./TaskCard";
+import { toast } from "sonner";
 
-function KanbanBoard({ tasks, setTasks, isDarkMode }) {
+const COLUMNS = [
+  { label: "Todo", status: "todo" },
+  { label: "In Progress", status: "in-progress" },
+  { label: "Done", status: "done" },
+];
 
-  const columns = [
-    { label: "Todo", status: "todo" },
-    { label: "In Progress", status: "in-progress" },
-    { label: "Done", status: "done" },
-  ];
+function KanbanBoard({ tasks, setTasks, isDarkMode, onEdit }) {
+  const [activeTask, setActiveTask] = useState(null);
 
-   return (
-    <div className="flex justify-between p-3 text-center gap-3">
-      {columns.map((col) => (
-        <div key={col.status} className={` h-[75vh] rounded-lg w-full shadow-lg ${isDarkMode ? "bg-gray-600 " : "bg-gray-200"}`}>
-          <h1 className="bg-gray-800 p-2 text-white rounded-t-lg ">{col.label}</h1>
-          <div className="p-2 flex flex-col gap-2">
-            {tasks
-              .filter((t) => t.status === col.status)
-              .map((task) => (
-                <div key={task.id} className={`p-3 rounded-md shadow-lg cursor-pointer text-left ${isDarkMode ? "bg-gray-700 text-white" : "bg-white text-black"}`}>
-                  <h2 className="font-bold">{task.title}</h2>
-                  <p className="text-sm text-gray-400">{task.description}</p>
-                </div>
-              ))}
-          </div>
-        </div>
-      ))}
-    </div>
+  const handleDragStart = (event) => {
+    const task = tasks.find((t) => t.id === event.active.id);
+    setActiveTask(task);
+  };
+
+  const handleDragOver = (event) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+    if (activeId === overId) return;
+
+    const activeTask = tasks.find((t) => t.id === activeId);
+    const overTask = tasks.find((t) => t.id === overId);
+
+    const overColumnId = overTask ? overTask.status : overId;
+
+    if (activeTask.status !== overColumnId) {
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === activeId ? { ...t, status: overColumnId } : t,
+        ),
+      );
+    }
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setActiveTask(null);
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+    if (activeId === overId) return;
+
+    const activeTask = tasks.find((t) => t.id === activeId);
+    const overTask = tasks.find((t) => t.id === overId);
+
+    if (overTask && activeTask.status === overTask.status) {
+      setTasks((prev) => {
+        const columnTasks = prev.filter((t) => t.status === activeTask.status);
+        const otherTasks = prev.filter((t) => t.status !== activeTask.status);
+
+        const oldIndex = columnTasks.findIndex((t) => t.id === activeId);
+        const newIndex = columnTasks.findIndex((t) => t.id === overId);
+
+        return [...otherTasks, ...arrayMove(columnTasks, oldIndex, newIndex)];
+      });
+    }
+  };
+
+  const handleDelete = (id) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+    toast.success("Task deleted", { position: "top-center" });
+  };
+
+  return (
+    <DndContext
+      collisionDetection={pointerWithin}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex justify-between p-3 gap-3">
+        {COLUMNS.map((col) => (
+          <KanbanColumn
+            key={col.status}
+            label={col.label}
+            status={col.status}
+            tasks={tasks.filter((t) => t.status === col.status)}
+            isDarkMode={isDarkMode}
+            onDelete={handleDelete}
+            onEdit={onEdit}
+          />
+        ))}
+      </div>
+
+      <DragOverlay>
+        {activeTask && <TaskCard task={activeTask} isDarkMode={isDarkMode} />}
+      </DragOverlay>
+    </DndContext>
   );
 }
 
-export default KanbanBoard
+export default KanbanBoard;

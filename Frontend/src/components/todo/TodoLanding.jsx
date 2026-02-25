@@ -57,6 +57,43 @@ function TodoLanding() {
 
     toast.success("Task added successfully", { position: "top-center" });
   };
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editDesc, setEditDesc] = useState("");
+  const [editStatus, setEditStatus] = useState("todo");
+
+  const handleEditOpen = (task) => {
+    setEditingTask(task);
+    setEditTitle(task.title);
+    setEditDesc(task.description);
+    setEditStatus(task.status);
+    setEditOpen(true);
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    if (!editTitle.trim()) {
+      toast.error("Title cannot be empty", { position: "top-center" });
+      return;
+    }
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === editingTask.id
+          ? {
+              ...t,
+              title: editTitle,
+              description: editDesc,
+              status: editStatus,
+            }
+          : t,
+      ),
+    );
+    setEditOpen(false);
+    toast.success("Task updated", { position: "top-center" });
+  };
+
   return (
     <div
       className={` min-h-screen p-2 ${isDarkMode ? "bg-neutral-800" : "bg-neutral-100"}`}
@@ -119,13 +156,12 @@ function TodoLanding() {
               <option value="in-progress">In Progress</option>
               <option value="done">Done</option>
             </select>
-              <button
+            <button
               type="submit"
-                className={`w-fit p-3 m-3 cursor-pointer rounded-md ${isDarkMode ? "bg-green-600 hover:bg-green-800 text-white" : "bg-green-500 hover:bg-green-700 text-white"}`}
-              >
-                Add
-              </button>
-          
+              className={`w-fit p-3 m-3 cursor-pointer rounded-md ${isDarkMode ? "bg-green-600 hover:bg-green-800 text-white" : "bg-green-500 hover:bg-green-700 text-white"}`}
+            >
+              Add
+            </button>
           </form>
 
           <DialogFooter asChild>
@@ -139,8 +175,65 @@ function TodoLanding() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <KanbanBoard tasks={tasks} setTasks={setTasks} isDarkMode={isDarkMode} />
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent
+          onPointerDownOutside={(e) => e.preventDefault()}
+          className={`${isDarkMode ? "bg-gray-700" : "bg-white text-black"}`}
+        >
+          <DialogHeader>
+            <DialogTitle
+              className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-black"}`}
+            >
+              Edit Task
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit}>
+            <input
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              className="border p-2 m-2 w-full rounded"
+              placeholder="Enter title..."
+            />
+            <textarea
+              value={editDesc}
+              onChange={(e) => setEditDesc(e.target.value)}
+              className={`border m-2 p-2 w-full rounded ${isDarkMode ? "bg-gray-600 text-white" : "bg-white text-black"}`}
+              placeholder="Enter description..."
+            />
+            <select
+              value={editStatus}
+              onChange={(e) => setEditStatus(e.target.value)}
+              className={`border m-2 p-2 w-full rounded ${isDarkMode ? "bg-gray-600 text-white" : "bg-white text-black"}`}
+            >
+              <option value="todo">Todo</option>
+              <option value="in-progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className={`p-3 m-2 rounded-md cursor-pointer ${isDarkMode ? "bg-green-600 hover:bg-green-800 text-white" : "bg-green-500 hover:bg-green-700 text-white"}`}
+              >
+                Save
+              </button>
+              <DialogClose asChild>
+                <button
+                  type="button"
+                  className={`p-3 m-2 rounded-md cursor-pointer ${isDarkMode ? "bg-red-600 hover:bg-red-800 text-white" : "bg-red-500 hover:bg-red-700 text-white"}`}
+                >
+                  Cancel
+                </button>
+              </DialogClose>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <KanbanBoard
+        tasks={tasks}
+        setTasks={setTasks}
+        isDarkMode={isDarkMode}
+        onEdit={handleEditOpen}
+      />
     </div>
   );
 }
