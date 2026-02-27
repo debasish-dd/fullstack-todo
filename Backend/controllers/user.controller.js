@@ -64,7 +64,7 @@ export const login = async (req, res) => {
             });
         }
 
-        const hashedPass = bcrypt.compare(password, user.password);
+        const hashedPass = await bcrypt.compare(password, user.password);
         if (!hashedPass) {
             return res.status(400).json({
                 message: "Invalid email or password",
@@ -74,9 +74,7 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({
             id: user._id,
-            name: user.name,
-            email: user.email,
-            username: user.username
+            email: user.email
         },
             process.env.JWT_SECRET,
             {
@@ -98,7 +96,7 @@ export const login = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({
-            message: "Server Error",
+            message: "Server Error while logging in",
             success: false,
             error: error.message
         })
@@ -107,7 +105,6 @@ export const login = async (req, res) => {
 
 export const profile = async (req, res) => {
     try {
-        
 
         return res.status(200).json({
             message: "User profile fetched successfully",
@@ -116,9 +113,25 @@ export const profile = async (req, res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            message: "Server Error",
+            message: "Server Error while fetching profile",
             success: false,
             error: error.message
         })
     }
 }
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie("user");
+        return res.status(200).json({
+            message: "Logout successful",
+            success: true
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server Error while logging out",
+            success: false,
+            error: error.message
+        })
+    }
+}   

@@ -1,17 +1,15 @@
-import { useState } from 'react'
-import Navbar from './components/navbar/Navbar'
-import Home from './components/home/Home'
+import { useState } from "react";
+import Navbar from "./components/navbar/Navbar";
+import Home from "./components/home/Home";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  axios.defaults.withCredentials = true;
   return (
-    <div className=''>
+    <div className="">
       <Navbar />
-     <Home/>
-      
+      <Home />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -11,7 +11,23 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { toast } from "sonner";
+import axios from "axios";
 
 function TodoLanding() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -94,14 +110,41 @@ function TodoLanding() {
     toast.success("Task updated", { position: "top-center" });
   };
 
+  const logoutHandler = async () => {
+    toast("Logout clicked", { position: "top-center" });
+    try {
+      const response = await axios.post("http://localhost:4000/api/v0/users/logout");
+      console.log("Logout response:", response);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to logout", { position: "top-center" });
+    }
+  };
+
+
   return (
     <div
       className={` min-h-screen p-2 ${isDarkMode ? "bg-neutral-800" : "bg-neutral-100"}`}
     >
       <div className="h-fit p-2 flex justify-between items-center m-2">
-        <div className="bg-amber-700 w-10 h-10 md:w-13 md:h-13 rounded-full  ">
-          {/* profile picture  */}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="bg-amber-700 w-10 h-10 md:w-13 md:h-13 rounded-full  ">
+              {/* profile picture  */}
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() =>
+                toast("Profile clicked", { position: "top-center" })
+              }
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={logoutHandler}>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <Switch
           checked={isDarkMode}
